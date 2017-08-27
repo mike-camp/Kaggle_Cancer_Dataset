@@ -1,6 +1,8 @@
 # Kaggle_Cancer_Dataset
 A repository for the kaggle cancer compitition
 
+* https://www.kaggle.com/c/msk-redefining-cancer-treatment
+
 ## Goal:
 
 For each gene mutation there are several journal articles which can be parsed by a human to decide how harmful/benign it may be.  Currently this takes a long time, and the goal of this compitition is to create a machine learning algorithm to predict how benign or harmful mutation is given the literature.  
