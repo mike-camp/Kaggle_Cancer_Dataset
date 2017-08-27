@@ -99,7 +99,4 @@ ENV/
 
 # mypy
 .mypy_cache/
-./data/test_text.csv
-./data/test_variants.csv
-./data/training_text.csv
-./data/training_variants.csv
+data/*
