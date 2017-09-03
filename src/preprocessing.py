@@ -3,9 +3,10 @@ used with the kaggle cancer text data
 """
 import re
 import nltk
+import pandas as pd
 
 
-def port_tokenizer(text):
+def port_tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
     any pattern that isn't a letter, number, or dash thats longer
     1 or more characters long.
@@ -13,20 +14,59 @@ def port_tokenizer(text):
     Parameters:
     ---------------
     text: str, string to tokenize
+    variants, set(str)
+        Set of all names of variants in test and training set
+    genes, set(str)
+        Set of all names of genes in the test and trianing set
+
 
     Returns:
     ---------------
     list of tokens (strings) formed by splitting the original text
+    and removing stopwords (note genes/variants are left uppercase)
     """
     words = re.split(r'[^a-z0-9-]+', text.lower())
     ps = nltk.stem.porter.PorterStemmer()
-    return [ps.stem(word) for word in words if word not in
-            nltk.corpus.stopwords.words('english') and word]
+
+    def process_word(word):
+        if word in variants or word in genes:
+            return word
+        if word and word not in nltk.corpus.stopwords.words('english'):
+            return ps.stem(word.lower())
+        return ''
+    return [process_word(word) for word in text if word]
+
+
+def get_genes_variants(train_loc, test_loc):
+    """
+    finds the genes and the varients from
+    the data and stores them in a two sets.
+
+    Parameters:
+    -----------
+    train_loc: str
+        filename of training data
+    test_loc: str
+        filename of test data
+
+    Returns:
+    --------
+    Varients:
+        set of all possible variations
+    genes:
+        set of all possible genes
+    """
+    df_train = pd.read_csv(train_loc, index_col=0)
+    df_test = pd.read_csv(test_loc, index_col=0)
+    genes = set(df_train.Gene.unique()).union(set(df_test.Gene.unique()))
+    variants = set(df_train.Variation.unique())\
+        .union(set(df_test.Variation.unique()))
+    return genes, variants
 
 
 def clean_text(text):
     """Removes references, figure references and numbers from text
-    and returns the lowercase string
+    and returns the cleaned string
 
     example:
     >>>process_text("As we can see from fig. 1 and the results from [1]")
@@ -56,7 +96,7 @@ def clean_text(text):
     text = re.sub(r'[([][a-zA-Z][)\]]', '', text)
     # remove numbers
     text = re.sub(r'\s([0-9,.%]+)\s', '', text)
-    return text.lower().strip()
+    return text.strip()
 
 
 def process_text(text):
