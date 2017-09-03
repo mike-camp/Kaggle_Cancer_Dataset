@@ -29,9 +29,16 @@ def port_tokenizer(text, variants, genes):
     ps = nltk.stem.porter.PorterStemmer()
 
     def process_word(word):
+        numbers = {'one','two','three','four','five','six',
+                   'seven','eight','nine','ten','elevin','twelve',
+                   'hundred','thousand','million'}
         if word in variants or word in genes:
             return word
-        if word and word not in nltk.corpus.stopwords.words('english'):
+        if word in numbers:
+            return ''
+        if len(word) <= 2:
+            return ''
+        if word not in nltk.corpus.stopwords.words('english'):
             return ps.stem(word.lower())
         return ''
     return [process_word(word) for word in text if word]
@@ -95,7 +102,8 @@ def clean_text(text):
     # remove letter refernces, ie "[A]"
     text = re.sub(r'[([][a-zA-Z][)\]]', '', text)
     # remove numbers
-    text = re.sub(r'\s([0-9,.%]+)\s', '', text)
+    text = re.sub(r'[^a-zA-Z0-9-]([0-9,.%]+)\s', '', text)
+    #get rid of spelled out numbers
     return text.strip()
 
 
