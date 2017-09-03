@@ -104,3 +104,5 @@ test_variants.csv
 training_text.csv
 training_variants.csv
 *.swp
+data/df_pk.pk data/test_text.csv data/test_variants.csv data/training_text.csv data/training_variants.csv
+data/*
