@@ -40,10 +40,15 @@ $
 if __name__=="__main__":
     if len(sys.argv)==0:
         save_location="../data/training_df.pk"
-        file_location="../data/text_training.csv"
+        file_location="../data/training_text.csv"
     elif len(sys.argv)==3:
         save_location=sys.argv[2]
         file_location=sys.argv[1]
+    elif len(sys.argv)==4:
+        variants_loc=sys.argv[3]
+        save_location=sys.argv[2]
+        file_location=sys.argv[1]
+        keep_genes_variations=True
     elif len(sys.argv)==2:
         if sys.argv[1] in {'help','h','-h','--help'}:
             print(help_string)
@@ -52,12 +57,26 @@ if __name__=="__main__":
         print("unknown option, enter help as command line option for help")
 
     print('loading dataframe')
-    df = pd.read_csv(file_location,delimiter='\|\|',index_col=0,
-                     encoding='utf-8',engine='python',skiprows=1,
+    df = pd.read_csv(file_location, delimiter=r'\|\|', index_col=0,
+                     encoding='utf-8', engine='python', skiprows=1,
                      names=['text'])
     print('processing data')
+    if keep_genes_variations:
+        if 'test' in variants_loc:
+            test_loc = variants_loc
+            train_loc = variants_loc.replace('test', 'train')
+        elif 'train' in variants_loc:
+            test_loc = variants_loc.replace('train', 'test')
+            train_loc = variants_loc
+        else:
+            print('cannot find test/train files')
+            print('please ensure that both train/test files exist')
+            sys.exit()
+        var, genes = prep.get_genes_varients(train_loc, test_loc)
+    else:
+        var, genes = set(), set()
     df['text'] = df.text.map(prep.clean_text)
-    df['text'] = df.text.map(prep.port_tokenizer)
+    df['text'] = df.text.map(lambda x: prep.port_tokenizer(x, var, genes))
     df.to_pickle(save_location)
     print('saved file, {} lines processed'.format(df.size))
 
