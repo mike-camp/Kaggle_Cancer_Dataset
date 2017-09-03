@@ -12,7 +12,7 @@ class TestPreprocessing(unittest.TestCase):
 
     def test_remove_fig(self):
         result = preprocessing.clean_text("From fig. 1 we see")
-        self.assertEqual(result,"From  we see")
+        self.assertEqual(result, "From  we see")
 
     def test_remove_figure(self):
         result = preprocessing.clean_text("see Figure A")

@@ -64,15 +64,15 @@ if __name__=="__main__":
     if keep_genes_variations:
         if 'test' in variants_loc:
             test_loc = variants_loc
-            train_loc = variants_loc.replace('test', 'train')
+            train_loc = variants_loc.replace('test', 'training')
         elif 'train' in variants_loc:
-            test_loc = variants_loc.replace('train', 'test')
+            test_loc = variants_loc.replace('training', 'test')
             train_loc = variants_loc
         else:
             print('cannot find test/train files')
             print('please ensure that both train/test files exist')
             sys.exit()
-        var, genes = prep.get_genes_varients(train_loc, test_loc)
+        var, genes = prep.get_genes_variants(train_loc, test_loc)
     else:
         var, genes = set(), set()
     df['text'] = df.text.map(prep.clean_text)
