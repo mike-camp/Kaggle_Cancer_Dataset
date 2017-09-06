@@ -41,7 +41,7 @@ def port_tokenizer(text, variants, genes):
         if word not in nltk.corpus.stopwords.words('english'):
             return ps.stem(word.lower())
         return ''
-    return [process_word(word) for word in text if word]
+    return [process_word(word) for word in words if process_word(word)]
 
 
 def get_genes_variants(train_loc, test_loc):
@@ -113,4 +113,4 @@ def process_text(text):
     a number, or a dash, and returns the list, with stopwords removed
     """
     test = clean_text(text)
-    return port_tokenizer(text)
+    return port_tokenizer(text,{},{})
