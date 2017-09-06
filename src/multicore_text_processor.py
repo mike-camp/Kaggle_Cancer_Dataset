@@ -81,9 +81,8 @@ if __name__=="__main__":
 
     # Implement the multiprocessing class by creating multiple threads
     pool = Pool()
-    def process(text):
-        return prep.process_text(text, var, genes)
-    df['processed'] = pool.map(process,df.text)
+    processor = prep.processor(var, genes)
+    df['processed'] = pool.map(processor.process_text,df.text)
     df.to_pickle(save_location)
     print('saved file, {} lines processed'.format(df.size))
 
