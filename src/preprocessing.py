@@ -4,7 +4,7 @@ used with the kaggle cancer text data
 import re
 import nltk
 import pandas as pd
-
+stopwords =  set(nltk.corpus.stopwords.words('english'))
 
 def port_tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
@@ -38,7 +38,7 @@ def port_tokenizer(text, variants, genes):
             return ''
         if len(word) <= 2:
             return ''
-        if word not in nltk.corpus.stopwords.words('english'):
+        if word not in stopwords:
             return ps.stem(word.lower())
         return ''
     return [process_word(word) for word in words if process_word(word)]
