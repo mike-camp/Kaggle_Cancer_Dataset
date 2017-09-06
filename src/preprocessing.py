@@ -4,7 +4,7 @@ used with the kaggle cancer text data
 import re
 import nltk
 import pandas as pd
-stopwords =  set(nltk.corpus.stopwords.words('english'))
+stopwords = set(nltk.corpus.stopwords.words('english'))
 
 def port_tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
@@ -29,9 +29,9 @@ def port_tokenizer(text, variants, genes):
     ps = nltk.stem.porter.PorterStemmer()
 
     def process_word(word):
-        numbers = {'one','two','three','four','five','six',
-                   'seven','eight','nine','ten','elevin','twelve',
-                   'hundred','thousand','million'}
+        numbers = {'one', 'two', 'three', 'four', 'five', 'six',
+                   'seven', 'eight', 'nine', 'ten', 'elevin', 'twelve',
+                   'hundred', 'thousand', 'million'}
         if word in variants or word in genes:
             return word
         if word in numbers:
@@ -107,10 +107,10 @@ def clean_text(text):
     return text.strip()
 
 
-def process_text(text):
+def process_text(text, variants={}, genes={}):
     """Removes references, figure references and numbers from text
     Then tokenizes the text by splitting it up on anything that isn't a letter,
     a number, or a dash, and returns the list, with stopwords removed
     """
     test = clean_text(text)
-    return port_tokenizer(text,{},{})
+    return port_tokenizer(text, variants, genes)
