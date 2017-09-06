@@ -107,6 +107,7 @@ def clean_text(text):
     return text.strip()
 
 
+
 def process_text(text, variants={}, genes={}):
     """Removes references, figure references and numbers from text
     Then tokenizes the text by splitting it up on anything that isn't a letter,
@@ -114,3 +115,10 @@ def process_text(text, variants={}, genes={}):
     """
     test = clean_text(text)
     return port_tokenizer(text, variants, genes)
+
+class processor(object):
+    def __init__(self,variants,genes):
+        self.variants=variants
+        self.genes=genes
+    def process_text(self,text):
+        return process_text(text,self.variants,self.genes)
