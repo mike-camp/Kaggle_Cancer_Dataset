@@ -25,7 +25,7 @@ def port_tokenizer(text, variants, genes):
     list of tokens (strings) formed by splitting the original text
     and removing stopwords (note genes/variants are left uppercase)
     """
-    words = re.split(r'[^a-z0-9-]+', text.lower())
+    words = re.split(r'[^a-zA-Z0-9-]+', text)
     ps = nltk.stem.porter.PorterStemmer()
 
     def process_word(word):
