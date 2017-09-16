@@ -32,7 +32,7 @@ The valid options for mode are
   - genes 
 
 Ex usage
-$python text_processor ../data/training_text.csv ../data/text_new.pk
+$python text_processor genes
 
  processing data
  2496 lines processed
@@ -43,7 +43,8 @@ def clean_and_tokenize(x):
 
 if __name__=="__main__":
     save_location="../data/training_df.pk"
-    training_loc="../data/training_text.csv"
+    training_text_loc="../data/training_text.csv"
+    test_text_loc = '../data/test_text.csv'
     test_loc = "../data/test_variants.csv"
     train_loc = "../data/training_variants.csv"
     var, genes = prep.get_genes_variants(train_loc, test_loc)
@@ -52,21 +53,24 @@ if __name__=="__main__":
         if sys.argv[1] in {'help','h','-h','--help'}:
             print(help_string)
             sys.exit()
-    elif len(sys.argv)==3:
-        method=sys.argv[2]
-        save_loc = sys.argv[3]
+        elif sys.argv[1] not in {'tokenize', 'stem', 'genes'}:
+            print('unknown method, valid methods are tokenize, stem, or gene')
+            sys.exit()
+        method=sys.argv[1]
     else:
         print("unknown option, enter help as command line option for help")
+    for train_test in ['train','test']:
+        print('loading dataframe')
+        file_location = training_text_loc if train_test=='train'\
+                else test_text_loc
+        df = pd.read_csv(file_location, delimiter=r'\|\|', index_col=0,
+                         encoding='utf-8', engine='python', skiprows=1,
+                         names=['text'])
+        print('processing data')
 
-    print('loading dataframe')
-    df = pd.read_csv(file_location, delimiter=r'\|\|', index_col=0,
-                     encoding='utf-8', engine='python', skiprows=1,
-                     names=['text'])
-    print('processing data')
-
-    pool = Pool()
-    processor = prep.processor(var, genes, method=method)
-    df['processed'] = pool.map(processor.process_text, df.text)
-    df.to_pickle(save_location)
-    print('saved file, {} lines processed'.format(df.size))
+        pool = Pool()
+        processor = prep.processor(var, genes, method=method)
+        df['processed'] = pool.map(processor.process_text, df.text)
+        df.to_pickle(''.join(['../data/',method,'-',train_test,'.pk']))
+        print('saved file, {} lines processed'.format(df.size))
 

@@ -28,7 +28,7 @@ def port_tokenizer(text, variants, genes):
     words = re.split(r'[^a-zA-Z0-9-*]+', text)
     ps = nltk.stem.porter.PorterStemmer()
 
-    return [ps.stem(process_word(word,var,genes)) for word in words if process_word(word,var,genes)]
+    return [ps.stem(process_word(word, variants, genes)) for word in words if process_word(word, variants, genes)]
 
 def tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
@@ -50,7 +50,7 @@ def tokenizer(text, variants, genes):
     and removing stopwords (note genes/variants are left uppercase)
     """
     words = re.split(r'[^a-zA-Z0-9-*]+', text)
-    return [process_word(word, var, genes) for word in words if process_word(word,var,genes)]
+    return [process_word(word, variants, genes) for word in words if process_word(word, variants, genes)]
 
 
 def gene_tokenizer(text, variants, genes):
@@ -61,7 +61,7 @@ def gene_tokenizer(text, variants, genes):
     return [word for word in words if word in var_genes]
 
 
-def process_word(word, var, genes):
+def process_word(word, variants, genes):
     """ Returns a word if the word is long enough to be
         a word, is not a number, and is not found in 
         var or genes
@@ -152,7 +152,9 @@ def clean_text(text):
     text = re.sub(r'[([][a-zA-Z][)\]]', '', text)
     # remove numbers
     text = re.sub(r'[^a-zA-Z0-9-]([0-9,.%]+)\s', '', text)
-    #get rid of spelled out numbers
+    # get rid of apostrophes and quoutes
+    text = re.sub("'", '', text)
+    text = re.sub('"', '', text)
     return text.strip()
 
 
@@ -174,8 +176,8 @@ class processor(object):
         if self.method == 'stem':
             return process_text(text,self.variants,self.genes)
         elif self.method == 'tokenize':
-            return tokenizer(text, variants, genes)
+            return tokenizer(text, self.variants, self.genes)
         elif self.method == 'genes':
-            return gene_tokenizer(text, variants, genes)
+            return gene_tokenizer(text, self.variants, self.genes)
             
     
