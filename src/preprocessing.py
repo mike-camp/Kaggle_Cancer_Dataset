@@ -4,7 +4,9 @@ used with the kaggle cancer text data
 import re
 import nltk
 import pandas as pd
+
 stopwords = set(nltk.corpus.stopwords.words('english'))
+
 
 def port_tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
@@ -27,6 +29,7 @@ def port_tokenizer(text, variants, genes):
     """
     words = re.split(r'[^a-zA-Z0-9-*]+', text)
     ps = nltk.stem.porter.PorterStemmer()
+
 
     return [ps.stem(process_word(word, variants, genes)) for word in words if process_word(word, variants, genes)]
 
@@ -151,10 +154,12 @@ def clean_text(text):
     # remove letter refernces, ie "[A]"
     text = re.sub(r'[([][a-zA-Z][)\]]', '', text)
     # remove numbers
+
     text = re.sub(r'[^a-zA-Z0-9-]([0-9,.%]+)\s', '', text)
     # get rid of apostrophes and quoutes
     text = re.sub("'", '', text)
     text = re.sub('"', '', text)
+
     return text.strip()
 
 
