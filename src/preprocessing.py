@@ -6,6 +6,7 @@ import nltk
 import pandas as pd
 stopwords = set(nltk.corpus.stopwords.words('english'))
 
+
 def port_tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
     any pattern that isn't a letter, number, or dash thats longer
@@ -28,7 +29,9 @@ def port_tokenizer(text, variants, genes):
     words = re.split(r'[^a-zA-Z0-9-*]+', text)
     ps = nltk.stem.porter.PorterStemmer()
 
-    return [ps.stem(process_word(word, variants, genes)) for word in words if process_word(word, variants, genes)]
+    return [ps.stem(process_word(word, variants, genes)) for word in words
+            if process_word(word, variants, genes)]
+
 
 def tokenizer(text, variants, genes):
     """Splits and tokenizes text.   The split is done on
@@ -50,7 +53,8 @@ def tokenizer(text, variants, genes):
     and removing stopwords (note genes/variants are left uppercase)
     """
     words = re.split(r'[^a-zA-Z0-9-*]+', text)
-    return [process_word(word, variants, genes) for word in words if process_word(word, variants, genes)]
+    return [process_word(word, variants, genes) for word in words
+            if process_word(word, variants, genes)]
 
 
 def gene_tokenizer(text, variants, genes):
@@ -63,7 +67,7 @@ def gene_tokenizer(text, variants, genes):
 
 def process_word(word, variants, genes):
     """ Returns a word if the word is long enough to be
-        a word, is not a number, and is not found in 
+        a word, is not a number, and is not found in
         var or genes
 
     Parameters:
@@ -74,7 +78,7 @@ def process_word(word, variants, genes):
         set of gene variations
     genes: set(str)
         set of genes
-    
+
     Returns:
     --------
     a string corresponding to processed word or ''
@@ -158,7 +162,6 @@ def clean_text(text):
     return text.strip()
 
 
-
 def process_text(text, variants={}, genes={}):
     """Removes references, figure references and numbers from text
     Then tokenizes the text by splitting it up on anything that isn't a letter,
@@ -167,17 +170,18 @@ def process_text(text, variants={}, genes={}):
     test = clean_text(text)
     return port_tokenizer(text, variants, genes)
 
+
 class processor(object):
+
     def __init__(self, variants, genes, method='stem'):
         self.variants = variants
         self.genes = genes
-        self.method=method
-    def process_text(self,text):
+        self.method = method
+
+    def process_text(self, text):
         if self.method == 'stem':
-            return process_text(text,self.variants,self.genes)
+            return process_text(text, self.variants, self.genes)
         elif self.method == 'tokenize':
             return tokenizer(text, self.variants, self.genes)
         elif self.method == 'genes':
             return gene_tokenizer(text, self.variants, self.genes)
-            
-    
