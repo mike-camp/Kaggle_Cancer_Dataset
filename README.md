@@ -1,4 +1,4 @@
-# Kaggle_Cancer_Dataset
+# Kaggle\_Cancer\_Dataset
 A repository for the kaggle cancer compitition
 
 * https://www.kaggle.com/c/msk-redefining-cancer-treatment
@@ -19,4 +19,11 @@ There are training and test csv files which correspond to either variants or tex
 2. text: columns = (ID,Text)
   - ID: int, Index Column
   - Text: str, long string corresponding to portions of journal articles which are related to the gene mutation
+
+## Description
+In the src directory there are two modules and two scripts
+  - preprocessing.py: a module to clean text and process text columns of a pandas dataframes
+  - utils.py: another module to preprocess non-textual columns of a dataframe 
+  - text\_processor.py: a script load the training data and turn it into a processed dataframe
+  - multicore\_text\_processor: a script to load the training data and turn it into a processed dataframe, which uses parrallel computing.
 
