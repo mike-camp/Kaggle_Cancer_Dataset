@@ -106,3 +106,8 @@ training_variants.csv
 *.swp
 data/df_pk.pk data/test_text.csv data/test_variants.csv data/training_text.csv data/training_variants.csv
 data/*
+*.npy
+*.dv2
+stderr.txt
+stdout.txt
+*.d2v
